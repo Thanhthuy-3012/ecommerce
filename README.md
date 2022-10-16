@@ -2,7 +2,14 @@
 - PHP 8.0, composer1, laravel8
 
 # SETTING
-
+- tao file .env => copy .env.example qua
+- config file .env: 
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ecommerce
+DB_USERNAME=root
+DB_PASSWORD=
 - Step 1:
 Install composer.
 Link: https://getcomposer.org/doc/00-intro.md#using-the-installer
