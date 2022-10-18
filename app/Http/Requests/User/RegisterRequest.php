@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\User;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseRequest;
 
-class CreateUserRequest extends BaseRequest
+class RegisterRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,9 +19,7 @@ class CreateUserRequest extends BaseRequest
             'gender'        => 'required|regex:/^[0-1]/',
             'phone_number'  => ['required', 'string', 'max:11', 'min:10', 'regex:/(0)[0-9]{9,10}/'],
             'address'       => 'required',
-            'password'       => 'required',
             'bithday'       => 'required',
-            'role_id'       => 'required',
         ];
     }
 }

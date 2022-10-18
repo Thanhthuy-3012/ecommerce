@@ -8,6 +8,7 @@ use App\Http\Controllers\Shop\Auth\LoginController as ShopLoginController;
 use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ShopController as ShopShopController;
+use App\Http\Controllers\User\Auth\LoginController as AuthLoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,5 +78,11 @@ Route::prefix('v1')->group(function () {
             Route::get('/product/{productId}', [ProductController::class, 'show']);
             Route::delete('/product/{productId}', [ProductController::class, 'delete']);
         });
+    });
+
+    Route::group(['prefix' => 'user'], function () {
+        Route::post('/login', [AuthLoginController::class, 'login']);
+        Route::post('/logout', [AuthLoginController::class, 'logout']);
+        Route::post('/register', [AuthLoginController::class, 'register']);
     });
 });
