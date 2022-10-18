@@ -20,7 +20,7 @@ class CreateUserRequest extends BaseRequest
             'phone_number'  => ['required', 'string', 'max:11', 'min:10', 'regex:/(0)[0-9]{9,10}/'],
             'address'       => 'required',
             'password'       => 'required',
-            'bithday'       => 'required',
+            'birthday'       => 'required',
             'role_id'       => 'required',
         ];
     }
