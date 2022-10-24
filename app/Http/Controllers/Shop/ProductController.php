@@ -214,7 +214,7 @@ class ProductController extends BaseController
                             'image' => $path
                         ]);
                     }
-                } elseif (empty($request[$image]) && $request[$flag] == 1) {
+                } elseif ($request[$image] == "null" && $request[$flag] == 1) {
                     if ($productImage)
                     {
                         $productImage->delete();
@@ -229,7 +229,7 @@ class ProductController extends BaseController
                 $product->update(array_merge(
                     $request->all(),
                     [
-                        'image' => $path,
+                        'image_product' => $path,
                     ]
                 ));
             } else {
