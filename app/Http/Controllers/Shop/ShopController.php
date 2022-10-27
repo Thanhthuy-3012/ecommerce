@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Constants\Constant;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\CreateShopRequest;
 use App\Http\Requests\Shop\UpdateShopRequest;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Http\Request;
@@ -114,7 +116,22 @@ class ShopController extends BaseController
 
             DB::beginTransaction();
             
-            Product::query()->whereRelation('category', 'shop_id', '=', $shopId)->delete();
+            $products = Product::query()->whereRelation('category', 'shop_id', '=', $shopId)->get();
+
+            foreach ($products as $product) 
+            {
+                foreach ($product->order as $order) {
+                    if ($order->status == Constant::ORDER_STATUS['draft'])
+                    {
+                        $order->delete();
+                    } elseif ($order->status == Constant::ORDER_STATUS['bought']) {
+                        $order->update([
+                            'product_id'    => null,
+                            'status'        => Constant::ORDER_STATUS['stop_selling'],
+                        ]);
+                    }
+                }
+            }
             Category::query()->where('shop_id', $shopId)->delete();
             $shop->delete();
 
