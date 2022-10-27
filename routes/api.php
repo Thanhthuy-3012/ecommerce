@@ -9,6 +9,8 @@ use App\Http\Controllers\Shop\CategoryController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ShopController as ShopShopController;
 use App\Http\Controllers\User\Auth\LoginController as AuthLoginController;
+use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\User\ProductController as UserProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,5 +86,16 @@ Route::prefix('v1')->group(function () {
         Route::post('/login', [AuthLoginController::class, 'login']);
         Route::post('/logout', [AuthLoginController::class, 'logout']);
         Route::post('/register', [AuthLoginController::class, 'register']);
+
+        Route::group(['middleware' => ['assign.guard:user']], function () {
+            Route::get('/product', [UserProductController::class, 'list']);
+            Route::get('/product/new', [UserProductController::class, 'listNew']);
+
+            Route::get('/cart', [OrderController::class, 'listCart']);
+            Route::post('/cart/add/{productId}', [OrderController::class, 'addToCart']);
+            Route::post('/transaction/create', [OrderController::class, 'createTransaction']);
+            Route::patch('/cart/update/{orderId}', [OrderController::class, 'updateToCart']);
+            Route::delete('/cart/delete/{orderId}', [OrderController::class, 'deleteToCart']);
+        });
     });
 });

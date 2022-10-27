@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Constants\Constant;
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\Category\CreateCategoryRequest;
@@ -86,7 +87,22 @@ class CategoryController extends BaseController
 
             DB::beginTransaction();
 
-            Product::query()->where('category_id', $categoryId)->delete();
+            $products = Product::query()->where('category_id', $categoryId)->get();
+
+            foreach ($products as $product) 
+            {
+                foreach ($product->order as $order) {
+                    if ($order->status == Constant::ORDER_STATUS['draft'])
+                    {
+                        $order->delete();
+                    } elseif ($order->status == Constant::ORDER_STATUS['bought']) {
+                        $order->update([
+                            'product_id'    => null,
+                            'status'        => Constant::ORDER_STATUS['stop_selling'],
+                        ]);
+                    }
+                }
+            }
             $category->delete();
 
             DB::commit();

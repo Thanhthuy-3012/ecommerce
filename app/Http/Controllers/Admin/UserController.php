@@ -103,7 +103,22 @@ class UserController extends BaseController
             $shops = Shop::query()->where('user_id', $userId)->get();
 
             foreach ($shops as $shop) {
-                Product::query()->whereRelation('category', 'shop_id', '=', $shop->id)->delete();
+                $products = Product::query()->whereRelation('category', 'shop_id', '=', $shop->id)->get();
+
+                foreach ($products as $product) 
+                {
+                    foreach ($product->order as $order) {
+                        if ($order->status == Constant::ORDER_STATUS['draft'])
+                        {
+                            $order->delete();
+                        } elseif ($order->status == Constant::ORDER_STATUS['bought']) {
+                            $order->update([
+                                'product_id'    => null,
+                                'status'        => Constant::ORDER_STATUS['stop_selling'],
+                            ]);
+                        }
+                    }
+                }
                 Category::query()->where('shop_id', $shop->id)->delete();
                 $shop->delete();
             }

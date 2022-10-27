@@ -43,6 +43,13 @@ class AssignGuard
                             'success' => false,
                             'message' => __("You don't have permission to access"),
                         ], 403);
+                    } else if ($guard == "user" && 
+                        auth()->user()->role_id !== Constant::USER_ROLE['user']) {
+
+                        return response()->json([
+                            'success' => false,
+                            'message' => __("You don't have permission to access"),
+                        ], 403);
                     }
                     return $next($request);
                 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Shop;
 
+use App\Constants\Constant;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Shop\Product\CreateProductRequest;
 use App\Http\Requests\Shop\Product\UpdateProductRequest;
@@ -247,14 +248,32 @@ class ProductController extends BaseController
     public function delete($productId)
     {
         try {
+            DB::beginTransaction();
+            
             $product = $this->product->find($productId);
 
             if (!$product) return $this->sendError('Product does not exist');
 
+            foreach ($product->order as $order) {
+                if ($order->status == Constant::ORDER_STATUS['draft'])
+                {
+                    $order->delete();
+                } elseif ($order->status == Constant::ORDER_STATUS['bought']) {
+                    $order->update([
+                        'product_id'    => null,
+                        'status'        => Constant::ORDER_STATUS['stop_selling'],
+                    ]);
+                }
+            }
+
             $product->delete();
+
+            DB::commit();
 
             return $this->sendSuccessResponse(null, 'Delete Product Succeed');
         } catch (\Throwable $th) {
+            DB::rollBack();
+            
             return $this->sendError($th->getMessage());
         }
     }

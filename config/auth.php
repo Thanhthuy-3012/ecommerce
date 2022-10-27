@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'user' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+            'hash' => false,
+        ],
         'admin' => [
             'driver' => 'jwt',
             'provider' => 'users',

@@ -15,13 +15,13 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id');
             $table->string('user_name');
             $table->string('user_phone');
+            $table->string('address');
             $table->double('amount')->default(0);
-            $table->string('payment');
-            $table->text('payment_info');
-            $table->string('security');
+            $table->string('payment')->nullable();
+            $table->text('payment_info')->nullable();
+            $table->string('security')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
