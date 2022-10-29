@@ -65,15 +65,26 @@ class OrderController extends BaseController
 
             if (!$product) return $this->sendError('Product does not exist');
 
-            $order = $this->order->create([
-                'user_id'       => $user->id,
-                'product_id'    => $product->id,
-                'product_name'  => $product->name,
-                'quantity'      => $request->quantity,
-                'price'         => $product->price,
-                'status'        => Constant::ORDER_STATUS['draft'],
-            ]);
+            $order = $this->order->where([
+                ['product_id', '=', $productId],
+                ['status', '=', Constant::ORDER_STATUS['draft']]
+                ])->first();
 
+            if (!$order) 
+            {
+                $order = $this->order->create([
+                    'user_id'       => $user->id,
+                    'product_id'    => $product->id,
+                    'product_name'  => $product->name,
+                    'quantity'      => $request->quantity,
+                    'price'         => $product->price,
+                    'status'        => Constant::ORDER_STATUS['draft'],
+                ]);
+            } else {
+                $order->update([
+                    'quantity' => $order->quantity + $request->quantity
+                ]);
+            }
             return $this->sendSuccessResponse($order, 'Add to cart succesfully');
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
