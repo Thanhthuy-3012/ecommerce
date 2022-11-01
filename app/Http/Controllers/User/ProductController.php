@@ -25,7 +25,7 @@ class ProductController extends BaseController
     public function list()
     {
         try {
-            $products = $this->product->with('category', 'imagePR')->get();
+            $products = $this->product->with('category', 'category.shop', 'imagePR')->get();
 
             foreach ($products as $product) {
                 $product->image_product = config('app.url') . '/storage/' . $product->image_product;
@@ -45,7 +45,7 @@ class ProductController extends BaseController
     public function listNew()
     {
         try {
-            $products = $this->product->with('category', 'imagePR')->orderBy('created_at', 'desc')->take(10)->get();
+            $products = $this->product->with('category', 'category.shop', 'imagePR')->orderBy('created_at', 'desc')->take(10)->get();
 
             foreach ($products as $product) {
                 $product->image_product = config('app.url') . '/storage/' . $product->image_product;

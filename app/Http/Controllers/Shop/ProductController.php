@@ -35,7 +35,7 @@ class ProductController extends BaseController
 
             if (!$shop) return $this->sendError('Shop does not exist');
 
-            $products = $this->product->with('category', 'imagePR')
+            $products = $this->product->with('category', 'imagePR', 'category.shop')
                         ->whereRelation('category', 'shop_id', '=', $shopId)->get();
 
             foreach ($products as $product) {
@@ -60,7 +60,7 @@ class ProductController extends BaseController
 
             if (!$category) return $this->sendError('Category does not exist');
 
-            $products = $this->product->with('category', 'imagePR')->where('category_id', $categoryId)->get();
+            $products = $this->product->with('category', 'category.shop', 'imagePR')->where('category_id', $categoryId)->get();
             foreach ($products as $product) {
                 $product->image_product = config('app.url') . '/storage/' . $product->image_product;
 
@@ -78,7 +78,7 @@ class ProductController extends BaseController
     public function show($productId)
     {
         try {
-            $product = $this->product->with('category', 'imagePR')->find($productId);
+            $product = $this->product->with('category', 'category.shop', 'imagePR')->find($productId);
 
             if (!$product) return $this->sendError('Product does not exist');
             $product->image_product = config('app.url') . '/storage/' . $product->image_product;
