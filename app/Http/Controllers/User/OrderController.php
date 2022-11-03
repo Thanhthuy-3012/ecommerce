@@ -48,9 +48,11 @@ class OrderController extends BaseController
                 $order['image_product'] = $order->product ? config('app.url') . '/storage/' . $order->product->image_product : null;
 
                 $orders[$shop->id]['carts'][] = $order;
-            }    
-
-            return $this->sendSuccessResponse($orders);
+            }
+            
+            $array = array_values($orders);
+        
+            return $this->sendSuccessResponse($array);
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage());
         }
