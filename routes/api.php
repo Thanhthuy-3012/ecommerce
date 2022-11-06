@@ -11,6 +11,7 @@ use App\Http\Controllers\Shop\ShopController as ShopShopController;
 use App\Http\Controllers\User\Auth\LoginController as AuthLoginController;
 use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\ProductController as UserProductController;
+use App\Http\Controllers\User\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -96,6 +97,8 @@ Route::prefix('v1')->group(function () {
             Route::post('/transaction/create', [OrderController::class, 'createTransaction']);
             Route::patch('/cart/update/{orderId}', [OrderController::class, 'updateToCart']);
             Route::delete('/cart/delete/{orderId}', [OrderController::class, 'deleteToCart']);
+
+            Route::post('/transaction', [TransactionController::class, 'listOrderHistory']);
         });
     });
 });

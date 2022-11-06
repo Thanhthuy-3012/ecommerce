@@ -19,4 +19,9 @@ class Transaction extends Model
         'security',
         'status',
     ];
+
+    public function order()
+    {
+        return $this->hasMany(Order::class, 'transaction_id', 'id');
+    }
 }
